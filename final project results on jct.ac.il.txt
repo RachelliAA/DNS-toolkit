@@ -1,0 +1,308 @@
+Microsoft Windows [Version 10.0.22631.3296]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\rache>cd C:\Networks\networking final project
+
+C:\Networks\networking final project>python dnstoolkit.py jct.ac.il
+CAA Record:
+sectigo.com
+letsencrypt.org
+
+
+dnsmap 0.36 - DNS Network Mapper
+
+[+] searching (sub)domains for jct.ac.il using built-in wordlist
+
+backup.jct.ac.il
+IP address #1: 10.1.101.1
+[+] warning: internal IP address disclosed
+
+bi.jct.ac.il
+IP address #1: 10.1.11.44
+[+] warning: internal IP address disclosed
+
+ca.jct.ac.il
+IP address #1: 10.1.12.100
+[+] warning: internal IP address disclosed
+
+cc.jct.ac.il
+IP address #1: 147.161.1.49
+
+download.jct.ac.il
+IP address #1: 147.161.1.49
+
+exchange.jct.ac.il
+IP address #1: 10.1.12.161
+[+] warning: internal IP address disclosed
+
+g.jct.ac.il
+IP address #1: 147.161.1.49
+
+gw.jct.ac.il
+IP address #1: 10.1.1.254
+[+] warning: internal IP address disclosed
+
+hd.jct.ac.il
+IP address #1: 147.161.1.50
+
+helpdesk.jct.ac.il
+IP address #1: 10.1.6.36
+[+] warning: internal IP address disclosed
+
+ip.jct.ac.il
+IP address #1: 147.161.1.49
+
+mail.jct.ac.il
+IP address #1: 147.161.1.38
+IP address #2: 147.161.1.29
+IP address #3: 147.161.1.36
+
+moodle.jct.ac.il
+IP address #1: 129.159.130.77
+
+nd.jct.ac.il
+IP address #1: 147.161.1.46
+
+ns3.jct.ac.il
+IP address #1: 10.1.37.152
+[+] warning: internal IP address disclosed
+
+oracle.jct.ac.il
+IP address #1: 10.1.6.48
+[+] warning: internal IP address disclosed
+
+oz.jct.ac.il
+IP address #1: 10.2.16.11
+[+] warning: internal IP address disclosed
+
+postgresql.jct.ac.il
+IP address #1: 10.1.6.51
+[+] warning: internal IP address disclosed
+
+s.jct.ac.il
+IP address #1: 147.161.1.49
+
+secure.jct.ac.il
+IP address #1: 147.161.1.49
+
+smtp.jct.ac.il
+IP address #1: 147.161.1.29
+IP address #2: 10.1.1.29
+[+] warning: internal IP address disclosed
+IP address #3: 147.161.1.36
+
+support.jct.ac.il
+IP address #1: 147.161.1.39
+
+tftp.jct.ac.il
+IP address #1: 10.1.1.60
+[+] warning: internal IP address disclosed
+
+tunnel.jct.ac.il
+IP address #1: 10.1.37.146
+[+] warning: internal IP address disclosed
+IP address #2: 10.1.37.149
+[+] warning: internal IP address disclosed
+IP address #3: 10.1.37.147
+[+] warning: internal IP address disclosed
+
+amp.jct.ac.il
+IP address #1: 10.1.105.1
+[+] warning: internal IP address disclosed
+
+api.jct.ac.il
+IP address #1: 147.161.1.55
+
+avi.jct.ac.il
+IP address #1: 147.161.1.46
+
+awx.jct.ac.il
+IP address #1: 10.1.1.70
+[+] warning: internal IP address disclosed
+
+cmm.jct.ac.il
+IP address #1: 10.1.56.13
+[+] warning: internal IP address disclosed
+
+ctf.jct.ac.il
+IP address #1: 10.1.37.90
+[+] warning: internal IP address disclosed
+
+dbs.jct.ac.il
+IP address #1: 10.1.37.22
+[+] warning: internal IP address disclosed
+
+dns.jct.ac.il
+IP address #1: 147.161.1.15
+IP address #2: 147.161.1.4
+
+efl.jct.ac.il
+IP address #1: 147.161.1.46
+
+fsb.jct.ac.il
+IP address #1: 10.1.10.1
+[+] warning: internal IP address disclosed
+
+idm.jct.ac.il
+IP address #1: 10.1.11.51
+[+] warning: internal IP address disclosed
+
+imc.jct.ac.il
+IP address #1: 10.1.105.5
+[+] warning: internal IP address disclosed
+
+its.jct.ac.il
+IP address #1: 147.161.1.39
+
+kms.jct.ac.il
+IP address #1: 10.1.6.45
+[+] warning: internal IP address disclosed
+
+lev.jct.ac.il
+IP address #1: 147.161.1.113
+
+mda.jct.ac.il
+IP address #1: 10.1.1.30
+[+] warning: internal IP address disclosed
+
+ndp.jct.ac.il
+IP address #1: 147.161.1.45
+
+ntp.jct.ac.il
+IP address #1: 10.1.1.33
+[+] warning: internal IP address disclosed
+IP address #2: 10.1.1.32
+[+] warning: internal IP address disclosed
+
+omd.jct.ac.il
+IP address #1: 10.1.1.14
+[+] warning: internal IP address disclosed
+
+oum.jct.ac.il
+IP address #1: 10.1.103.2
+[+] warning: internal IP address disclosed
+
+owa.jct.ac.il
+IP address #1: 147.161.1.49
+
+pwd.jct.ac.il
+IP address #1: 10.1.11.11
+[+] warning: internal IP address disclosed
+
+sap.jct.ac.il
+IP address #1: 10.1.135.25
+[+] warning: internal IP address disclosed
+
+sus.jct.ac.il
+IP address #1: 10.1.6.89
+[+] warning: internal IP address disclosed
+
+tfs.jct.ac.il
+IP address #1: 10.1.11.42
+[+] warning: internal IP address disclosed
+
+umm.jct.ac.il
+IP address #1: 10.1.1.99
+[+] warning: internal IP address disclosed
+
+vic.jct.ac.il
+IP address #1: 10.2.6.100
+[+] warning: internal IP address disclosed
+
+vmm.jct.ac.il
+IP address #1: 10.1.102.21
+[+] warning: internal IP address disclosed
+
+vpl.jct.ac.il
+IP address #1: 129.159.150.173
+
+vpn.jct.ac.il
+IP address #1: 147.161.1.113
+
+vro.jct.ac.il
+IP address #1: 10.1.102.23
+[+] warning: internal IP address disclosed
+
+web.jct.ac.il
+IP address #1: 147.161.1.37
+
+wol.jct.ac.il
+IP address #1: 10.1.1.6
+[+] warning: internal IP address disclosed
+
+www.jct.ac.il
+IP address #1: 185.186.66.220
+
+zfs.jct.ac.il
+IP address #1: 10.1.37.100
+[+] warning: internal IP address disclosed
+[+] 63 (sub)domains and 67 IP address(es) found
+[+] 39 internal IP address(es) disclosed
+
+
+
+% The data in the WHOIS database of the .il registry is provided
+% by ISOC-IL for information purposes, and to assist persons in
+% obtaining information about or related to a domain name
+% registration record. ISOC-IL does not guarantee its accuracy.
+% By submitting a WHOIS query, you agree that you will use this
+% Data only for lawful purposes and that, under no circumstances
+% will you use this Data to: (1) allow, enable, or otherwise
+% support the transmission of mass unsolicited, commercial
+% advertising or solicitations via e-mail (spam);
+% or  (2) enable high volume, automated, electronic processes that
+% apply to ISOC-IL (or its systems).
+% ISOC-IL reserves the right to modify these terms at any time.
+% By submitting this query, you agree to abide by this policy.
+
+query:        jct.ac.il
+
+reg-name:     jct
+domain:       jct.ac.il
+
+descr:        Jerusalem College of Technology
+admin-c:      II-MB30312-IL
+tech-c:       II-AB27107-IL
+zone-c:       II-AB27107-IL
+nserver:      dns.jct.ac.il
+nserver:      dns2.jct.ac.il
+validity:     N/A
+DNSSEC:       unsigned
+status:       Transfer Locked
+changed:      registrar AT ns.il 19960317 (Assigned)
+changed:      domain-registrar AT isoc.org.il 20040112 (Changed)
+changed:      domain-registrar AT isoc.org.il 20080107 (Changed)
+changed:      domain-registrar AT isoc.org.il 20080107 (Changed)
+changed:      domain-registrar AT isoc.org.il 20150420 (Changed)
+changed:      domain-registrar AT isoc.org.il 20150831 (Changed)
+changed:      domain-registrar AT isoc.org.il 20210125 (Changed)
+changed:      domain-registrar AT isoc.org.il 20210127 (Changed)
+
+person:       menachem burack
+address      jerusalem college of technolgy
+address      21 ha'vaad ha'leumi st
+address      jerusalem
+address      91160
+address      Israel
+phone:        97226751017
+e-mail:       burack AT jct.ac.il
+nic-hdl:      II-MB30312-IL
+changed:      domain-registrar AT isoc.org.il 20210125
+
+person:       avi benemanuel
+address      jerusalem college of technology
+address      21 ha'vaad ha'leumi st.
+address      jerusalem
+address      91160
+address      Israel
+phone:        97226751036
+e-mail:       unixstaff AT jct.ac.il
+nic-hdl:      II-AB27107-IL
+changed:      domain-registrar AT isoc.org.il 20210125
+
+registrar name: Israel Internet Association ISOC-IL
+registrar info: www.isoc.org.il
+
+% Rights to the data above are restricted by copyright.
+
+C:\Networks\networking final project>
