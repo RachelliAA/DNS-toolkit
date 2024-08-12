@@ -1,0 +1,259 @@
+"""
+Rachelli Adler 
+copy rights to Rachelli Adler
+April 2nd 2024
+final assignment. dns toolkit
+should come with 2 argumentfrom the cmd: namefile___domain name
+1-Certification Authority Authorizations (CAA)
+2-DNS enumeration
+3-whois
+"""
+
+from scapy.all import *
+import socket
+import sys
+
+#gets a domain address and returns a list of the Certification Authority Authorizations
+def get_caa_records(domain):
+    dns_query = IP(dst="8.8.8.8") / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname=domain, qtype='CAA')) # builds the DNS request packet
+
+    dns_response = sr1(dns_query, verbose=0, timeout=2) # sends a DNS request packet to a DNS server and waits for a response
+    caa_lst = [] # the list of the CAAs
+    if dns_response and DNS in dns_response and dns_response[DNS].ancount > 0: # makes sure it got responses with DNS
+        for res in range(dns_response[DNS].ancount): # goes through all the responses of DNS
+            if dns_response[DNS].an[res].type == 257: # Check if the record type is CAA (type 257)
+                # Decode the raw bytes into a string
+                caa_value = dns_response[DNS].an[res].rdata.decode('utf-8')
+                # Extract the domain name from the CAA record value
+                if 'issue' in caa_value:
+                    domain_name = caa_value.split('issue')[1].strip() # the domain name comes after the word issue
+                    caa_lst.append(domain_name) # adds to the list
+                if 'mailto:' in caa_value: # Check if the CAA record value is an email address
+                    email = caa_value.split('mailto:')[1].strip() # Extract the email address
+                    caa_lst.append(email) # adds to the list
+        return caa_lst
+    else:
+        return "No response received"
+
+
+def main_caa(domain):
+    caa_records = get_caa_records(domain)#gets a list of the CAAs
+    if caa_records:
+        if isinstance(caa_records, list):#makes sure that we got a list (more than 1 CAA)
+            print("CAA Record:")
+            for record in caa_records:
+                print(record)
+        else:#if there was only one CAA
+            print(caa_records)
+
+
+###################################################################################################
+
+#goes through the word list and each subdomain in its sends to the dns server and checks if it exists with the domain.
+def dnsmap(domain, wordlist,dns_server):
+    try:
+        print(f"dnsmap 0.36 - DNS Network Mapper\n")
+        print(f"[+] searching (sub)domains for {domain} using built-in wordlist")
+
+        total_domains = 0
+        total_ips = 0
+        internal_ips = 0
+
+        for subdomain in wordlist:#goes through all the subb domains
+            query_domain = f"{subdomain}.{domain}"#creats the new domain to look for
+            dns_query = IP(dst= dns_server) / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname=query_domain))#builds the query packet
+
+            # Send DNS query packet and capture response
+            dns_response = sr1(dns_query, verbose=0,timeout=2)
+
+            if dns_response and DNS in dns_response and dns_response[DNS].ancount > 0:#if we got an answer that domain exists
+                once ="false"
+                total_domains += 1
+                amount=1
+                for i in range(dns_response[DNS].ancount):#goes through all of the answers
+                    ip_address = dns_response[DNS].an[i].rdata#gets the ip address
+                    if isinstance(ip_address, bytes):
+                        continue  # Skip printing if the IP address is resolved to a domain name
+                    if dns_response[DNS].an[i].type != 1:  # if its not IPv4
+                        continue
+                    if once == "false":#prints the domain name only once
+                        print(f"\n{query_domain}")
+                        once = "true"
+                    print(f"IP address #{amount}: {ip_address}")
+                    amount += 1
+                    total_ips += 1
+                    if str(ip_address).startswith(("10.", "192.168.", "172.")):#checks if its internal ip address
+                        internal_ips += 1
+                        print("[+] warning: internal IP address disclosed")
+                #print()
+
+
+        print(f"[+] {total_domains} (sub)domains and {total_ips} IP address(es) found")
+        print(f"[+] {internal_ips} internal IP address(es) disclosed")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+#opens the file and reads all the word in it and puts into a list
+def read_wordlist(filename):
+    with open(filename, 'r') as file:
+        return [line.strip() for line in file.readlines()]
+
+def get_dns_server(domain):
+    try:
+        # Construct DNS query for SOA record- Start of Authority
+        dns_query = IP(dst="8.8.8.8") / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname=domain, qtype="SOA"))
+
+        # Send DNS query and capture response
+        dns_response = sr1(dns_query, verbose=0, timeout=5)
+
+        # Extract DNS server address from the SOA record
+        if dns_response and DNS in dns_response and dns_response[DNS].an:
+            soa_record = dns_response[DNS].an[0]
+            dns_server = soa_record.mname.decode()
+            return dns_server
+        else:
+            print("Failed to retrieve DNS server address.")
+            return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+def main_dnsmap(domain):
+    dns_server1 = get_dns_server(domain)#gets the dns server for the domain
+    if dns_server1:
+        dns_server = dns_server1#print(f"DNS server for {domain}: {dns_server}")
+        wordlist_filename = "C:/Networks/networking final project/sub domains.txt"  # where the file is saved on my computer
+        wordlist = read_wordlist(wordlist_filename)  # reads all the file and save it as a list
+        dnsmap(domain, wordlist, dns_server)  # calls the dnsmap function
+
+
+#########################################################################################################
+
+
+def query_whois_server(domain, whois_server, port=43):
+    try:
+        # Open a TCP socket to the WHOIS server
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(10)  # Set timeout for the socket
+            s.connect((whois_server, port))#connects the socket to the server
+
+            # Send the domain query
+            s.sendall((domain + "\r\n").encode())
+            second_server=""
+            if whois_server == "whois.iana.org":#if were tring to find the server for the domain then send to IANA
+                # catch DNS packets to catch WHOIS answers
+                packets = sniff(count=10, lfilter=filter_dns, timeout=5)#catched whois answers
+                return packets
+            # if sending to the domains server for the answer to print to the server
+            elif whois_server != "whois.iana.org":
+                # catch DNS packets to catch WHOIS answers
+                packets = sniff(count=20, lfilter=filter_dns, timeout=5)#catched whois answers
+                for pkt in packets:#goes through all the packets
+                    print_whois_payload(pkt)#prints the payload dto the user
+                    if pkt.haslayer(Raw):  # if the packet has payload answer
+                        payload = pkt[Raw].load.decode(errors='ignore')  # gets the payload
+                        lines = payload.split('\n')  # devide the packet into lines
+                        # Iterate through each line
+                        for line in lines:
+                            # Check if the line contains 'registrar whois server' to get the second server
+                            if 'registrar whois server' in line.lower():
+                                # Split the line into words splits with a space this is because even if
+                                # its split between packets it would still work
+                                words = line.split()
+                                # Iterate through each word
+                                for word in words:
+                                    # Check if the word starts with "whois."
+                                    if word.lower().startswith("whois."):
+                                        second_server= word
+
+                if second_server:#if hase a second server(.net .com .edu ...)
+                    return second_server
+                return "ALL GOOD"#if managed to print to the user the information
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+
+#gets the tld ending of the domain and returns the server needed for the whois on the domain
+def get_registry_whois_server(tld):
+    try:
+        # Query IANA WHOIS server to determine the registry WHOIS server
+        iana_response = query_whois_server(tld, "whois.iana.org")
+        for packet in iana_response:#goes through all the packets
+            if packet.haslayer(Raw):
+                payload = packet[Raw].load.decode(errors='ignore')
+                lines = payload.split('\n')#devide the packet into lines
+                # Iterate through each line
+                for line in lines:
+                    # Check if the line contains 'whois.' all whois servers start with "whois."
+                    if 'whois.' in line.lower():
+                        # Split the line into words splits with a space this is because even if the whois: ... is split between packets it would still work
+                        words = line.split()
+                        # Iterate through each word
+                        for word in words:
+                            # Check if the word starts with "whois."
+                            if word.lower().startswith("whois."):
+                                return word
+        return None#couldnt find the server name
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+#the filter used for sniffing packets. it sniffs only whois responce packets
+def filter_dns(packet):
+#whois runs on TCP
+    return packet.haslayer(TCP) and packet[TCP].sport == 43
+
+#prints the whois responce to the useer
+def print_whois_payload(packet):
+    if packet.haslayer(Raw):
+        # Gets the payload data
+        payload = packet[Raw].load.decode(errors='ignore')
+        print(payload, end='')#doesnt go down a line after printing the packet
+
+def main_whois(domain):
+    # Extract TLD from the domain name
+    tld = domain.split(".")[-1]
+    # Determine registry WHOIS server
+    registry_whois_server = get_registry_whois_server(tld)  # gets the server to send the whois domain to
+
+    if registry_whois_server:
+        # Query registry WHOIS server that i found
+        whois_response = query_whois_server(domain, registry_whois_server)
+        if whois_response.startswith("whois."):  # if it has a second server then it returns the servername
+            second_whois_response = query_whois_server(domain, whois_response)  # calls the second time
+            if second_whois_response != "ALL GOOD" and not second_whois_response.startswith(
+                    "whois."):  # if tthe  second server didnt work
+                print("Failed to retrieve second WHOIS response from registry WHOIS server.")
+        if whois_response != "ALL GOOD" and not whois_response.startswith("whois."):
+            print("Failed to retrieve WHOIS response from registry WHOIS server.")
+    else:
+        print("Failed to determine registry WHOIS server. Unable to proceed.")
+
+
+#-----------------------------MAIN------------------------------------------------------------
+if __name__ == "__main__":
+    #Check if the correct number of arguments are provided
+    if len(sys.argv) != 2:
+        print("Usage: python script_name.py domain")
+        sys.exit(1)
+
+    # Extract command-line arguments
+    domain = sys.argv[1]#domain name
+
+    try:  # Attempt to perform CAA
+        main_caa(domain)
+    except Exception:  # If an exception occurs during the DNS lookup, print a generic error message
+        print("Can't perform caa due to an error.")
+    print("\n")
+    try:  # Attempt to perform DNSMAP
+       main_dnsmap(domain)
+    except Exception:  # If an exception occurs during the DNS lookup, print a generic error message
+       print("Can't perform dnsmap due to an error.")
+    print("\n")
+    try:  # Attempt to perform WHOIS
+        main_whois(domain)
+    except Exception:  # If an exception occurs during the DNS lookup, print a generic error message
+        print("Can't perform whois due to an error.")
+
